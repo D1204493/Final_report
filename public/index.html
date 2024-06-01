@@ -34,17 +34,17 @@
         </div>
         <div class="form-row">
             <div class="col-md-6">
-                <label for="averagelight_price" style="font-size: 15px;">電燈平均電價:</label>
+                <label for="averagelight_price" style="font-size: 15px;">電燈平均電價:(元)</label>
                 <input style="margin-bottom: 15px;" type="text" id="averagelight_price" name="averagelight_price" v-model="averageLightPrice" class="form-control" placeholder="AverageLight_Price">
             </div>
             <div class="col-md-6">
-                <label for="averagepower_price" style="font-size: 15px;">電力平均電價:</label>
+                <label for="averagepower_price" style="font-size: 15px;">電力平均電價:(元)</label>
                 <input type="text" id="averagepower_price" name="averagepower_price" v-model="averagePowerPrice" class="form-control" placeholder="AveragePower_Price">
             </div>
         </div>
         <div class="form-row">
             <div class="col-md-6">
-                <label for="average_price" style="font-size: 15px;">平均電價:</label>
+                <label for="average_price" style="font-size: 15px;">平均電價:(元)</label>
                 <input type="text" id="average_price" name="average_price" v-model="averagePrice" class="form-control" placeholder="Average_Price">
             </div>
             <div class="col-md-6">
@@ -78,6 +78,7 @@
         <div class="description">
             <img src="images/2.png" alt="pic2">
             <img src="images/3.png" alt="pic3">
+            <p>「 一度電 」就是耗電量 1,000 瓦特的電器，連續使用 1 小時所消耗的總電量。</p>
             <p>參考資料：https://magazine.twenergy.org.tw/Cont.aspx?CatID=6&ContID=3058</p>
             <p>電費計算：https://www.housefeel.com.tw/article/台電電費-夏季電費-電費計算/</p>
         </div>
@@ -87,10 +88,10 @@
   <table>
     <thead>
     <tr>
-      <th>年份</th>
-      <th>電燈平均電價</th>
-      <th>電力平均電價</th>
-      <th>平均電價</th>
+      <th>年份(西元年)</th>
+      <th>電燈平均電價(元)</th>
+      <th>電力平均電價(元)</th>
+      <th>平均電價(元)</th>
     </tr>
     </thead>
     <tbody>
@@ -196,19 +197,19 @@
               labels: labels,
               datasets: [
                 {
-                  label: '電燈平均電價',
+                  label: '電燈平均電價(元)',
                   data: lightPrices,
                   borderColor: 'rgb(255, 99, 132)',
                   fill: false
                 },
                 {
-                  label: '電力平均電價',
+                  label: '電力平均電價(元)',
                   data: powerPrices,
                   borderColor: 'rgb(54, 162, 235)',
                   fill: false
                 },
                 {
-                  label: '平均電價',
+                  label: '平均電價(元)',
                   data: averagePrices,
                   borderColor: 'rgb(75, 192, 192)',
                   fill: false
@@ -277,10 +278,10 @@
 
             // 設定英文字段名和中文標題的映射
             const headersMapping = {
-                'year': '年份',
-                'average_light_price': '電燈平均電價',
-                'average_power_price': '電力平均電價',
-                'average_price': '平均電價',
+                'year': '年份(西元年)',
+                'average_light_price': '電燈平均電價(元)',
+                'average_power_price': '電力平均電價(元)',
+                'average_price': '平均電價(元)',
                 // 添加更多映射
             };
 
