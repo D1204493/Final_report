@@ -7,13 +7,27 @@ a {
   color: #00B7FF;
 }
 
+#begin {
+  background-image: url('../images/1.png');
+  background-size: cover; /* 設置背景圖片大小 */
+  background-position: center; /* 設置背景圖片位置 */
+  padding: 10px; /* 可選：增加內邊距以防止文本緊貼在圖片邊緣 */
+  margin-bottom: 15px;
+}
+
 h1 {
   text-align: center;
+  font-size: 40px;
+  font-family: "LXGW WenKai Mono TC", monospace;
+  font-weight: 400;
+  font-style: normal;
 }
 
 h2 {
   text-align: center;
+  font-size: 30px;
   margin-bottom: 20px;
+  font-family: "Comic Sans MS";
 }
 
 h3 {
@@ -21,6 +35,13 @@ h3 {
   background-color: lightblue;
   border-radius: 10px;
   font-size: 20px;
+}
+
+img {
+  display: block; /* 使圖片成為塊级元素 */
+  margin: 10px auto; /* 水平居中 */
+  max-width: 100%; /* 確保圖片不會超出容器的寬度 */
+  height: 60%; /* 讓圖片保持比例 */
 }
 
 table {
@@ -57,6 +78,62 @@ th, td {
   border: 2px dashed #000; /* 黑色虛線框 */
 }
 
-button {
-  cursor: pointer; /* 設置鼠標移到按鈕上時的樣式 */
+footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-top: 1px solid #ddd; /* 設置頂部邊框為灰色實線 */
 }
+
+#price_form {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.form-row {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.form-row .col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-container {
+  text-align: right;
+}
+
+button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+

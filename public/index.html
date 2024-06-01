@@ -2,7 +2,11 @@
 
 <head>
   <title>Electricity Price</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/style.css" >
+<!-- 字型 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
   <!--vue3的連結-->
   <script src="https://cdn.staticfile.org/vue/3.2.36/vue.global.min.js"></script>
   <!--圖表(Chart)的連結-->
@@ -10,31 +14,55 @@
 </head>
 
 <body>
+
+<div id="begin">
   <h1>電價新增與查詢</h1>
   <h2>Welcome to Search</h2>
+</div>
 
   <!--表格-->
 <div id="app">
-  <form id="price_form">
-    <label for="year">年份:</label>
-    <input type="text" id="year" name="year" v-model="year" placeholder="Year">&nbsp;&nbsp;
-    <button type="button" id="search_button">搜尋</button><br><br>
-    <label for="averagelight_price">電燈平均電價:</label>
-    <input type="text" id="averagelight_price" name="averagelight_price" v-model="averageLightPrice" placeholder="AverageLight_Price">&nbsp;&nbsp;
-    <label for="averagepower_price">電力平均電價:</label>
-    <input type="text" id="averagepower_price" name="averagepower_price" v-model="averagePowerPrice" placeholder="AveragePower_Price">&nbsp;&nbsp;
-    <label for="average_price">平均電價:</label>
-    <input type="text" id="average_price" name="average_price" v-model="averagePrice" placeholder="Average_Price">&nbsp;&nbsp;
-    <button type="button" onclick="insertData()">新增</button>
-  </form>
+    <form id="price_form">
+        <div class="form-row">
+            <div class="col-md-6">
+                <label for="year" style="font-size: 15px;">年份:</label>
+                <input type="text" id="year" name="year" v-model="year" class="form-control" placeholder="Year">
+            </div>
+            <div class="col-md-6">
+                <button type="button" id="search_button">搜尋</button>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <label for="averagelight_price" style="font-size: 15px;">電燈平均電價:</label>
+                <input style="margin-bottom: 15px;" type="text" id="averagelight_price" name="averagelight_price" v-model="averageLightPrice" class="form-control" placeholder="AverageLight_Price">
+            </div>
+            <div class="col-md-6">
+                <label for="averagepower_price" style="font-size: 15px;">電力平均電價:</label>
+                <input type="text" id="averagepower_price" name="averagepower_price" v-model="averagePowerPrice" class="form-control" placeholder="AveragePower_Price">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <label for="average_price" style="font-size: 15px;">平均電價:</label>
+                <input type="text" id="average_price" name="average_price" v-model="averagePrice" class="form-control" placeholder="Average_Price">
+            </div>
+            <div class="col-md-6">
+                <div class="btn-container">
+                    <button type="button" onclick="insertData()">新增</button>
+                </div>
+            </div>
+        </div>
+    </form>
 
-<!-- 收尋時出來的資料 -->
+<!-- 搜尋時出來的資料 -->
     <div id="search_result">
-        <div><h3>收尋資料</h3></div>
+        <div><h3>顯示搜尋資料</h3></div>
         <table id="result_table" border="1">
             <!-- 表格資料將在這裡顯示 -->
         </table>
 
+        <div><h3>解 釋</h3></div>
         <div class="description">
             <p>台電電價分為「電燈用電」及「電力用電」兩大類，說明如下：</p>
             <p>一、電燈用電：依有無裝置電表計量用電度數，可再劃分為「包燈用電」及「表燈用電」，主要係110、220伏特。</p>
@@ -47,7 +75,10 @@
             <p style="text-indent: 2em;">(二)高壓電力用電：生產或非生產性質用電場所之電燈、小型器具及動力，契約容量在100瓩以上至未達1,000瓩者，如大型工廠、機關、銀行等。</p>
             <p style="text-indent: 2em;">(三)特高壓電力用電：生產或非生產性質用電場所之電燈、小型器具及動力，契約容量在1,000瓩以上者，如超大型工廠、捷運、機場等。</p>
         </div>
-
+        <div class="description">
+            <img src="images/2.png" alt="pic2">
+            <img src="images/3.png" alt="pic3">
+        </div>
     </div>
 
   <button type="button" @click="fetchData">顯示歷史資料</button>
@@ -69,9 +100,15 @@
     </tr>
     </tbody>
   </table>
-
   <canvas id="electricityChart"></canvas>
   </div>
+
+  <footer>
+      <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+      <p>台電地址：100208 臺北市羅斯福路三段242號　總機：02-23651234</p>
+      <p>24小時客服專線：1911（免付費，公共電話除外，通話時間限制 5分鐘）</p>
+      <p>政風檢舉電話：02-23667364　政風檢舉信箱：d05703@taipower.com.tw</p>
+  </footer>
 
 
 <!-- 將上面表單的資料，透過 fetch async await 來發送 POST 請求到 /api/insert ，並在成功後，用 p 顯示伺服器回傳的【純文字】訊息，不是 json -->
@@ -216,7 +253,11 @@
                 }
 
                 const data = await response.json();
-                displayDataInTable(data);
+                if (data.length === 0) {
+                    alert('沒有這個時間的資料');
+                } else {
+                    displayDataInTable(data);
+                }
             } catch (error) {
                 console.error('Error:', error);
             }
