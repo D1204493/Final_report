@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <form id="price_form">
+    <label for="year">年份:</label>
+    <input type="text" id="year" name="year" v-model="year" placeholder="Year"><br><br>
+    <label for="averagelight_price">電燈平均電價:</label>
+    <input type="text" id="averagelight_price" name="averagelight_price" v-model="averageLightPrice" placeholder="AverageLight_Price">&nbsp;&nbsp;
+    <label for="averagepower_price">電力平均電價:</label>
+    <input type="text" id="averagepower_price" name="averagepower_price" v-model="averagePowerPrice" placeholder="AveragePower_Price">&nbsp;&nbsp;
+    <label for="average_price">平均電價:</label>
+    <input type="text" id="average_price" name="average_price" v-model="averagePrice" placeholder="Average_Price"><br><br>
+    <button type="button" onclick="insertData()">新增</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!--    <button type="button" id="search_button">搜尋</button><br><br>-->
+    </form>
+
+<button id="showdata">顯示資料</button>
+<table id="data">
+    <tr>
+        <th>年份</th>
+        <th>電燈平均價格</th>
+        <th>電力平均價格</th>
+        <th>平均電力</th>
+    </tr>
+</table>
+
+
+<!-- 將上面表單的資料，透過 fetch async await 來發送 POST 請求到 /api/insert ，並在成功後，用 p 顯示伺服器回傳的【純文字】訊息，不是 json-->
+    <p id="result"></p>
+    <script>
+        const priceForm = document.getElementById("price_form");
+        const result = document.getElementById("result");
+        priceForm.addEventListener('button', async (e) => {
+            e.preventDefault();
+
+    const year = document.querySelector('input[name="year"]').value;
+    const average_light_price = document.querySelector('input[name="averagelight_price"]').value;
+    const average_power_price = document.querySelector('input[name="averagepower_price"]').value;
+    const average_price = document.querySelector('input[name="average_price"]').value;
+
+    const response = await fetch('/api/insert', {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ year, average_light_price, average_power_price, average_price })
+    });
+
+    const result = await response.text();
+    document.getElementById('result').innerText = result;
+
+    document.querySelector('input[name="year"]').value = '';
+    document.querySelector('input[name="averagelight_price"]').value = '';
+    document.querySelector('input[name="averagepower_price"]').value = '';
+    document.querySelector('input[name="average_price"]').value = '';
+
+    })
+    </script>
+
+
+<script>
+    document.getElementById('showdata').addEventListener('click', async () => {
+        const response = await fetch('/api/electricity');
+        const data = await response.json();
+        const table = document.getElementById('data');
+        data.forEach((item) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.year}</td>
+                <td>${item.average_light_price}</td>
+                <td>${item.average_power_price}</td>
+                <td>${item.average_price}</td>
+            `;
+            table.appendChild(row);
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<html xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <title>Electricity Price</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <!--vue3的連結-->
+  <script src="https://cdn.staticfile.org/vue/3.2.36/vue.global.min.js"></script>
+  <!--圖表(Chart)的連結-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+</head>
+
+<body>
+  <h1>電價新增與查詢</h1>
+  <h2>Welcome to Search</h2>
+
+  <!--表格-->
+<div id="app">
+  <form id="price_form">
+    <label for="year">年份:</label>
+    <input type="text" id="year" name="year" v-model="year" placeholder="Year">&nbsp;&nbsp;
+    <button type="button" id="search_button">搜尋</button><br><br>
+    <label for="averagelight_price">電燈平均電價:</label>
+    <input type="text" id="averagelight_price" name="averagelight_price" v-model="averageLightPrice" placeholder="AverageLight_Price">&nbsp;&nbsp;
+    <label for="averagepower_price">電力平均電價:</label>
+    <input type="text" id="averagepower_price" name="averagepower_price" v-model="averagePowerPrice" placeholder="AveragePower_Price">&nbsp;&nbsp;
+    <label for="average_price">平均電價:</label>
+    <input type="text" id="average_price" name="average_price" v-model="averagePrice" placeholder="Average_Price">&nbsp;&nbsp;
+    <button type="button" onclick="insertData()">新增</button>
+  </form>
+
+<!-- 收尋時出來的資料 -->
+    <div id="search_result">
+        <div><h3>收尋資料</h3></div>
+        <table id="result_table" border="1">
+            <!-- 表格資料將在這裡顯示 -->
+        </table>
+
+        <div class="description">
+            <p>台電電價分為「電燈用電」及「電力用電」兩大類，說明如下：</p>
+            <p>一、電燈用電：依有無裝置電表計量用電度數，可再劃分為「包燈用電」及「表燈用電」，主要係110、220伏特。</p>
+            <p style="padding-left: 2em;" >(一)包燈用電：屋外公共設施及特定之電燈及小型器具，如公用路燈、交通號誌等。因用電容量小、用電時間固定、用電平穩等特性，
+                且通常不易覓得裝設電表的位置，或裝表後有礙市容觀瞻，並未裝置電表量測實際用電量，僅按用電器具之盞數及容量(瓦數)收取電費，統稱「包燈用電」。</p>
+            <p style="text-indent: 2em;">(二)表燈用電：指透過電表量測實際用電度數後收取電費者，如一般住宅及小商店之用電。</p><br>
+            <p style="text-indent: -2em; padding-left: 2em;">二、電力用電：按供電電壓等級分類，可分為低壓電力(主要係220或380伏特供電)、
+                高壓電力(主要係3,300、11,400、22,800伏特高壓供電)及特高壓電力 (主要係69,000、161,000、345,000伏特特高壓供電)等三類。</p>
+            <p style="text-indent: 2em;">(一)低壓電力用電：生產或非生產性質用電場所之電燈、小型器具及動力，契約容量未滿100瓩者，如中型機關、學校及中小型工廠等。</p>
+            <p style="text-indent: 2em;">(二)高壓電力用電：生產或非生產性質用電場所之電燈、小型器具及動力，契約容量在100瓩以上至未達1,000瓩者，如大型工廠、機關、銀行等。</p>
+            <p style="text-indent: 2em;">(三)特高壓電力用電：生產或非生產性質用電場所之電燈、小型器具及動力，契約容量在1,000瓩以上者，如超大型工廠、捷運、機場等。</p>
+        </div>
+
+    </div>
+
+  <button type="button" @click="fetchData">顯示歷史資料</button>
+  <table>
+    <thead>
+    <tr>
+      <th>年份</th>
+      <th>電燈平均電價</th>
+      <th>電力平均電價</th>
+      <th>平均電價</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="data in electricityData" :key="data.year">
+      <td>{{ data.year }}</td>
+      <td>{{ data.average_light_price }}</td>
+      <td>{{ data.average_power_price }}</td>
+      <td>{{ data.average_price }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <canvas id="electricityChart"></canvas>
+  </div>
+
+
+<!-- 將上面表單的資料，透過 fetch async await 來發送 POST 請求到 /api/insert ，並在成功後，用 p 顯示伺服器回傳的【純文字】訊息，不是 json -->
+  <p id="result"></p>
+  <script>
+    async function insertData() {
+      const year = document.querySelector('input[name="year"]').value;
+      const average_light_price = document.querySelector('input[name="averagelight_price"]').value;
+      const average_power_price = document.querySelector('input[name="averagepower_price"]').value;
+      const average_price = document.querySelector('input[name="average_price"]').value;
+
+      const response = await fetch('/api/insert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ year, average_light_price, average_power_price, average_price })
+      });
+
+      const result = await response.text();
+      document.getElementById('result').innerText = result;
+
+      document.querySelector('input[name="year"]').value = '';
+      document.querySelector('input[name="averagelight_price"]').value = '';
+      document.querySelector('input[name="averagepower_price"]').value = '';
+      document.querySelector('input[name="average_price"]').value = '';
+
+    }
+  </script>
+
+
+
+<!--呈現歷史資料表格與圖表-->
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          year: '',
+          averageLightPrice: '',
+          averagePowerPrice: '',
+          averagePrice: '',
+          electricityData: []
+        };
+      },
+      methods: {
+        async insertData() {
+          // Implement the logic to insert data into the database
+          // Here is a placeholder for the actual data insertion logic
+          console.log("Insert Data Functionality");
+
+          // After successfully inserting data, clear the input fields
+          this.year = '';
+          this.averageLightPrice = '';
+          this.averagePowerPrice = '';
+          this.averagePrice = '';
+        },
+        async fetchData() {
+          try {
+            const response = await fetch('http://localhost:3000/api/electricity');
+            if (response.ok) {
+              const data = await response.json();
+              this.electricityData = data;
+              this.renderChart();
+            } else {
+              console.error('Error fetching data:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Fetch error:', error);
+          }
+        },
+        renderChart() {
+          const ctx = document.getElementById('electricityChart').getContext('2d');
+          const labels = this.electricityData.map(item => item.year);
+          const lightPrices = this.electricityData.map(item => item.average_light_price);
+          const powerPrices = this.electricityData.map(item => item.average_power_price);
+          const averagePrices = this.electricityData.map(item => item.average_price);
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: '電燈平均電價',
+                  data: lightPrices,
+                  borderColor: 'rgb(255, 99, 132)',
+                  fill: false
+                },
+                {
+                  label: '電力平均電價',
+                  data: powerPrices,
+                  borderColor: 'rgb(54, 162, 235)',
+                  fill: false
+                },
+                {
+                  label: '平均電價',
+                  data: averagePrices,
+                  borderColor: 'rgb(75, 192, 192)',
+                  fill: false
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Electricity Prices Over Time'
+                }
+              }
+            }
+          });
+        }
+      }
+    }).mount('#app');
+  </script>
+
+
+
+<!--搜尋year 一個值,按下搜尋的button,按下後透過feth async awit 來發送post請求到http://localhost:3000/api JSON,並在成功後,呈現的資料以table顯示-->
+<script>
+    document.getElementById('search_button').addEventListener('click', async () => {
+        const year = document.getElementById('year').value;
+
+        if (year) {
+            try {
+                const response = await fetch('http://localhost:3000/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ year })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                displayDataInTable(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else {
+            alert('請輸入年份');
+        }
+    });
+
+    function displayDataInTable(data) {
+        const table = document.getElementById('result_table');
+        table.innerHTML = '';
+
+        // Assuming the data is an array of objects
+        if (data.length > 0) {
+
+            // 設定英文字段名和中文標題的映射
+            const headersMapping = {
+                'year': '年份',
+                'average_light_price': '電燈平均電價',
+                'average_power_price': '電力平均電價',
+                'average_price': '平均電價',
+                // 添加更多映射
+            };
+
+            // Create table headers
+            const headers = Object.keys(data[0]);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = headersMapping[header] || header; // 使用映射或默認英文
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Create table rows
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = item[header];
+                    row.appendChild(td);
+                });
+                table.appendChild(row);
+            });
+        } else {
+            const row = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = headers.length;
+            td.textContent = '沒有資料';
+            row.appendChild(td);
+            table.appendChild(row);
+        }
+    }
+</script>
+
+
+</body>
+
+</html>
